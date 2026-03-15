@@ -1,0 +1,440 @@
+🚀 Higher Order components
+    => Higher Order component is function that takes a component and returns a component
+    => Higher order components basically takes a component as an input then it enhances that component, add some features to that component and returns it back, it acts like a enhancer kind of function that takes the existing component and just enhances it, modifies that component and returns it back
+    => Higher Order components are pure functions, what do you mean by pure functions ?
+    => i am passing RestaurantCard inside this function / Higher order component 
+    => i will not modify the code of RestaurantCard
+    => i will not change the behaviour of RestaurantCard
+    => i am just taking RestaurantCard as an input and i am using it exactly how we use RestaurantCard
+    => i am just enhancing it
+
+🚀 RestaurantCard.jsx
+
+import { CDN_URL } from "../utils/constants";
+
+const RestaurantCard = ({ resData }) => {
+//   console.log(resData);
+
+  const { name, cuisines, avgRating, costForTwo, sla, cloudinaryImageId } =
+    resData?.info;
+
+  const deliveryTime = sla?.deliveryTime;
+
+  return (
+    <div
+      className="res-card flex-1 min-w-[250px] max-w-[300px] rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300 p-3 cursor-pointer
+"
+    >
+      {/* Image */}
+      <div className="res-logo w-full h-48">
+        <img
+          className="w-full h-full object-cover rounded-md"
+          src={CDN_URL + cloudinaryImageId}
+          alt="Restaurant"
+        />
+      </div>
+
+      {/* Details */}
+      <div className="mt-3">
+        {/* Restaurant Name */}
+        <h3 className="text-base font-semibold text-gray-800 truncate">
+          {name}
+        </h3>
+
+        {/* Cuisines */}
+        <p className="text-sm text-gray-500 mt-1 truncate">
+          {cuisines.join(", ")}
+        </p>
+
+        {/* Delivery Time */}
+        <p className="text-sm text-gray-500 mt-1 truncate">
+          {deliveryTime} minutes
+        </p>
+
+        {/* Rating */}
+        <p className="text-sm text-gray-500 mt-1 truncate">{avgRating} ⭐</p>
+
+        {/* <div className="flex items-center mt-2 text-sm">
+          <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-medium">
+            ⭐ 4.3
+          </span>
+        </div> */}
+        {/* costForTwo */}
+        <p className="text-sm text-gray-500 mt-1 truncate">{costForTwo}</p>
+      </div>
+    </div>
+  );
+};
+
+export default RestaurantCard;
+
+=> now we create a Higher Order Component that gives a enhaced RestaurantCard that is RestaurantCardPromoted
+
+// Higher Order Component
+// input => RestaurantCard 
+// output => RestaunatCardPromoted 
+
+🚀 How to create ?
+=> 
+
+const withPromotedLabel = (RestaurantCard) =>{
+  return () => {
+    return (
+      <div>
+       
+      </div>
+    )
+  }
+}
+
+=> Higher order component is a normal javascript function that takes <RestaurantCard /> as an input 
+=> what it will return ?
+    => It return another component inside it 
+    => How ?
+
+        return () => {
+            return (
+                <div>
+       
+                </div>
+            )
+        }
+    
+    => but this component have a promoted label on top of it
+
+=> Higher order component
+=> export as a named export 
+
+    export const withPromotedLabel = (RestaurantCard) =>{
+        return () => {
+             return (
+                <div>
+                    <label>Promoted</label>
+                    <RestaurantCard />
+                 </div>
+             )
+        }
+    }
+
+
+
+=> 🚀 now RestaurantCard.jsx
+
+import { CDN_URL } from "../utils/constants";
+
+const RestaurantCard = ({ resData }) => {
+//   console.log(resData);
+
+  const { name, cuisines, avgRating, costForTwo, sla, cloudinaryImageId } =
+    resData?.info;
+
+  const deliveryTime = sla?.deliveryTime;
+
+  return (
+    <div
+      className="res-card flex-1 min-w-[250px] max-w-[300px] rounded-lg bg-white shadow-sm hover:shadow-md transition duration-300 p-3 cursor-pointer
+"
+    >
+      {/* Image */}
+      <div className="res-logo w-full h-48">
+        <img
+          className="w-full h-full object-cover rounded-md"
+          src={CDN_URL + cloudinaryImageId}
+          alt="Restaurant"
+        />
+      </div>
+
+      {/* Details */}
+      <div className="mt-3">
+        {/* Restaurant Name */}
+        <h3 className="text-base font-semibold text-gray-800 truncate">
+          {name}
+        </h3>
+
+        {/* Cuisines */}
+        <p className="text-sm text-gray-500 mt-1 truncate">
+          {cuisines.join(", ")}
+        </p>
+
+        {/* Delivery Time */}
+        <p className="text-sm text-gray-500 mt-1 truncate">
+          {deliveryTime} minutes
+        </p>
+
+        {/* Rating */}
+        <p className="text-sm text-gray-500 mt-1 truncate">{avgRating} ⭐</p>
+
+        {/* <div className="flex items-center mt-2 text-sm">
+          <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs font-medium">
+            ⭐ 4.3
+          </span>
+        </div> */}
+        {/* costForTwo */}
+        <p className="text-sm text-gray-500 mt-1 truncate">{costForTwo}</p>
+      </div>
+    </div>
+  );
+};
+
+// Higher Order Component
+// input => RestaurantCard => output => RestaunatCardPromoted 
+
+export const withPromotedLabel = (RestaurantCard) =>{
+  return () => {
+    return (
+      <div>
+        <label>Promoted</label>
+        <RestaurantCard />
+      </div>
+    )
+  }
+}
+
+export default RestaurantCard;
+
+🚀 How we use this Higher Order Component ?
+=>  Body.jsx
+
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard"; 🚀
+import resList from "../utils/mockData";
+import { useEffect, useState } from "react";
+import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
+
+const Body = () => {
+  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [filteredRestaurants, setfilteredRestaurants] = useState([]);
+
+  const [searchText, setSearchText] = useState("");
+
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard); 🚀
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetch(
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.52110&lng=73.85020&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING",
+    );
+
+    const json = await data.json();
+
+    console.log(
+      json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants,
+    );
+    // Optional Chaining
+    setListOfRestaurants(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants,
+    );
+    setfilteredRestaurants(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants,
+    );
+    console.log(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants,
+    );
+  };
+
+  // console.log("Body component render")
+
+  const onlineStatus = useOnlineStatus();
+
+  if (onlineStatus === false) return <h1>Check your internet connection</h1>;
+
+  return listOfRestaurants.length === 0 ? (
+    <Shimmer />
+  ) : (
+    <div className="body max-w-7xl mx-auto px-6 py-8">
+      <div className="filter mb-8 flex flex-col md:flex-row items-center gap-4">
+        {/* Search Section */}
+        <div className="search flex items-center gap-3 w-full md:w-auto">
+          <input
+            type="text"
+            placeholder="Search restaurants..."
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+            className="search-box px-4 py-2 w-full md:w-72 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 shadow-sm"
+          />
+          <button
+            className="search-btn px-5 py-2 bg-orange-500 hover:bg-orange-600 transition duration-200 rounded-xl text-white font-semibold cursor-pointer shadow-md"
+            onClick={() => {
+              // Filter the restaurants and Update the UI
+              // searchText
+              console.log(searchText);
+              const filteredRestaurant = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase()),
+              );
+              setfilteredRestaurants(filteredRestaurant);
+            }}
+          >
+            Search
+          </button>
+        </div>
+        <button
+          onClick={() => {
+            // Filter Logic here
+            const filteredList = listOfRestaurants.filter(
+              (res) => res.info.avgRating >= 4,
+            );
+
+            setListOfRestaurants(filteredList);
+          }}
+          className="filter-btn px-6 py-2 bg-orange-500 rounded-xl text-white font-semibold cursor-pointer"
+        >
+          Top Rated Restaurants
+        </button>
+      </div>
+      <div className="res-container flex flex-wrap gap-6">
+        {/* <RestaurantCard resData={resList[0]} /> */}
+
+        {filteredRestaurants.map((restaurant, idx) => (
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurants/" + restaurant.info.id}
+          >
+          🚀  {/** if the restaurant is promoted then add a promoted label to it */}
+            {restaurant.data.promoted ? (
+              <RestaurantCardPromoted resData={restaurant} />
+            ) : (
+              <RestaurantCard resData={restaurant} index={idx} />
+            )} 🚀
+          </Link>
+        ))}
+        {/* 
+        {resList.map((restaurant, idx) => {
+          return (
+            <RestaurantCard
+              resData={restaurant}
+              key={restaurant.info.id}
+              index={idx}
+            />
+          );
+        })} */}
+      </div>
+    </div>
+  );
+};
+
+export default Body;
+
+🚀   <RestaurantCardPromoted resData={restaurant} />
+=> here we pass the resData, but where we receive this data ?
+    =>
+export const withPromotedLabel = (RestaurantCard) =>{
+  return (props) => { // over here
+    return (
+      <div>
+        <label>Promoted</label>
+        <RestaurantCard {...props} />
+      </div>
+    )
+  }
+}
+
+export default RestaurantCard;
+
+
+🚀 All the React applications have Two layers
+Data layer => 
+UI layer => mostly consisting of JSX
+
+=> The UI layer is powered by Data layer
+=> Data layer consist of your states, props, local variables, {} inside JSX
+
+=> create a Menu page 
+🚀 RestaurantMenu.jsx
+
+import useRestaurantMenu from "../utils/useRestaurantMenu";
+import Shimmer from "./Shimmer";
+import { useParams } from "react-router-dom";
+
+const RestaurantMenu = () => {
+{/*  const [resInfo, setResInfo] = useState(null); */}
+  const { resId } = useParams();
+
+  const resInfo = useRestaurantMenu(resId)
+
+  /**
+   * put fetchData logic in this custom hook => useRestaunatMenu()
+   * this hook fetch the data and will give it to <RestaurantMenu />
+   * RestaurantMenu component does not have to manage its own state
+   * const [resInfo, setResInfo] = useState(null);
+   * It somehow magically get access to the resInfo
+   * now, <RestaurantMenu /> is just concerned about that i have got my resId
+   * now with this resId, for that particular restaurant i just want my restaurant menu
+   * basically, i will just give my resId to this hook
+   * useRestaurantMenu(resId)
+   * const resInfo = useRestaurantMenu(resId)
+   * now, the single responsibility of RestaurantMenu is to get the data and display it
+   * how to get the data is abstracted
+   */
+{/*
+    useEffect(() => {
+    fetchMenu();
+  }, []);
+
+  const fetchMenu = async () => {
+    const data = await fetch(MENU_API + resId);
+
+    const json = await data.json();
+    console.log(json);
+    setResInfo(json.data);
+  };
+  */}
+
+
+  const { name, cuisines, costForTwo } = resInfo?.cards[0].card?.card?.info;
+  //   resInfo?.cards[2]?.card?.card?.info;
+
+  const { itemCards } =
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
+
+  return resInfo === null ? (
+    <Shimmer />
+  ) : (
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white shadow-sm rounded-lg">
+      <h2 className="text-xl font-semibold text-gray-800 mb-1">{name}</h2>
+      <h2 className="text-xl font-semibold text-gray-800 mb-1">
+        {cuisines.join(", ")}
+      </h2>
+      <h2 className="text-xl font-semibold text-gray-800 mb-1">{costForTwo}</h2>
+
+      <h4 className="text-gray-500 mb-6">Menu</h4>
+
+      <ul className="space-y-3">
+        {itemCards.map((item) => (
+          <li className="p-3 bg-gray-50 rounded-md">
+            {itemCards[0].card.info.name} - {" Rs."}
+            {itemCards[0].card.info.price / 100 ||
+              itemCards[0].card.info.defaultPrice / 100}
+          </li>
+        ))}
+        {/* <li className="p-3 bg-gray-50 rounded-md">{itemCards[0].card.info.name}</li> */}
+        <li className="p-3 bg-gray-50 rounded-md">Diet Coke</li>
+        <li className="p-3 bg-gray-50 rounded-md">Mutton</li>
+      </ul>
+    </div>
+  );
+};
+
+export default RestaurantMenu;
+
+=> filter categories based on ItemCategory 
+=> How ?
+
+
+  const categories =
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.["card"]?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory",
+    );
+  console.log(categories);
+
+  
