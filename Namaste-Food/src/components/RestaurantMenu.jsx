@@ -1,4 +1,5 @@
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
 
@@ -52,7 +53,7 @@ const RestaurantMenu = () => {
         c.card?.["card"]?.["@type"] ===
         "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory",
     );
-  console.log(categories);
+  // console.log(categories);
 
   return resInfo === null ? (
     <Shimmer />
@@ -63,7 +64,12 @@ const RestaurantMenu = () => {
         {cuisines.join(", ")}
       </h2>
       {/** categories accordion */}
-      
+      {categories.map((category) => (
+        <RestaurantCategory
+          key={category?.card?.card?.title}
+          data={category?.card?.card}
+        />
+      ))}
     </div>
   );
 };
