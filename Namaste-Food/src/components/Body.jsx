@@ -1,9 +1,10 @@
 import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import resList from "../utils/mockData";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -48,6 +49,7 @@ const Body = () => {
 
   if (onlineStatus === false) return <h1>Check your internet connection</h1>;
 
+  const { loggedInUser, setUserName } = useContext(UserContext)
   return listOfRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
@@ -92,6 +94,16 @@ const Body = () => {
         >
           Top Rated Restaurants
         </button>
+      <div>
+        <label>UserName: </label>
+           <input
+            value={loggedInUser}
+            onChange={(e) => {
+              setUserName(e.target.value)
+            }}
+            className="search-box px-4 py-2 w-full md:w-72 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 shadow-sm"
+          />
+      </div>
       </div>
       <div className="res-container flex flex-wrap gap-6">
         {/* <RestaurantCard resData={resList[0]} /> */}

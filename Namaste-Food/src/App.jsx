@@ -25,7 +25,7 @@ const App = () => {
     setUserName(data.name);
   }, []);
   return (
-    <UserContext.Provider value={{ loggedInUser: userName}}>
+    <UserContext.Provider value={{ loggedInUser: userName, setUserName}}>
     <div className="bg-gray-100 min-h-screen">
       <Header />
       <Outlet />
